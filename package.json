@@ -11,7 +11,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon -r dotenv/config app/server.js",
-    "start": "dev"
+    "start": "yarn dev"
   },
   "dependencies": {
     "@fastify/static": "^6.5.0",
