@@ -131,6 +131,10 @@ class App {
     const hmac = createHmac("sha256", this.clientSecret);
     return signature === hmac.update(content).digest("hex");
   }
+  verifyPost(headers) {
+    console.log(headers)
+    
+  }
 }
 
 export default App;

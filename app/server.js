@@ -27,7 +27,7 @@ server.post("/webhook", async (req, reply) => {
 
   // Get the site's access token
   const token = await app.data.get(site);
-
+  
   // Initialize a new Webflow client
   const webflow = new Webflow({ token });
 
@@ -49,6 +49,45 @@ server.register(fastifyStatic, {
 
 server.get("/", async (req, reply) => {
   await reply.sendFile("index.html");
+});
+
+server.post("/posting", async (req, reply) => {
+  const valid = app.verifyRequest(req.headers, req.body);
+  console.log("\n\n\n\n");
+  console.log('valid', valid)
+  console.log("\n\n\n\n");
+  if (!valid) return reply.status(401).send("posting not possible");
+
+  const { authorization } = req.headers
+
+  const { msg } = req.body;
+  reply.statusCode = 200;
+  return reply.status(200).send(authorization)
+});
+
+server.get("/test", async (req, reply) => {
+  app.verifyPost(req.headers)
+  const token = await app.getToken(); 
+  const webflow = new Webflow({ token });
+  const sites = await webflow.get("/beta/sites");
+  if(token){
+    const webflow = new Webflow({ token });
+    const sites = await webflow.get("/beta/sites");
+
+    return fetch('https://catfact.ninja/fact', {
+      method: 'GET',
+    }).then((t)=>{
+      return 'ok'
+    }).catch((e)=>{
+      console.log('err',e)
+      return {
+        "error": true,
+        "message": e
+      }
+    })
+  } else {
+    return "no auth"
+  }
 });
 
 // If we recieve a get request to /auth then the server will install our App via OAuth
